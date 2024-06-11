@@ -87,7 +87,7 @@ master1   Ready    control-plane   74m   v1.28.10   192.168.20.126   <none>     
 worker1   Ready    <none>          52m   v1.28.10   192.168.20.127   <none>        Ubuntu 20.04.6 LTS   5.4.0-182-generic   containerd://1.6.33
 worker2   Ready    <none>          52m   v1.28.10   192.168.20.128   <none>        Ubuntu 20.04.6 LTS   5.4.0-182-generic   containerd://1.6.33
 ```
-Access the service: 
+Access the service:  
 http://192.168.20.126:30190/  
 http://192.168.20.127:30190/  
 http://192.168.20.128:30190/  
