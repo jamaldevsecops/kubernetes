@@ -88,6 +88,10 @@ Method2: containerd as a Container Runtimes
 Ref: https://v1-27.docs.kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd  
 Backup and restart containerd configuration
 ```
+curl -fsSL https://get.docker.com -o install-docker.sh
+sudo bash install-docker.sh
+```
+```
 sudo mv /etc/containerd/config.toml /etc/containerd/config.toml.backup
 sudo systemctl restart containerd
 ````
