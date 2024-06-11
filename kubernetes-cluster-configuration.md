@@ -86,6 +86,10 @@ Method2: containerd as a Container Runtimes
 Ref: https://v1-27.docs.kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd  
 Backup and restart containerd configuration
 ```
+curl -fsSL https://get.docker.com -o install-docker.sh
+sudo bash install-docker.sh
+```
+```
 sudo mv /etc/containerd/config.toml /etc/containerd/config.toml.backup
 sudo systemctl restart containerd
 ````
@@ -96,7 +100,7 @@ sudo systemctl restart containerd
 Install Kubernetes packages and setup repository
 ------------------------------------------------
 Ref: https://v1-27.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/  
-Note: In releases older than Debian 12 and Ubuntu 22.04, /etc/apt/keyrings does not exist by default; you can create it by running sudo mkdir -m 755 /etc/apt/keyrings
+Note: In releases older than Debian 12 and Ubuntu 22.04, ```/etc/apt/keyrings``` does not exist by default; you can create it by running ```sudo mkdir -m 755 /etc/apt/keyrings```
 ```
 sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl
