@@ -31,7 +31,7 @@ spec:
 ```
 kubectl create -f nginx-deployment.yml
 ```
-The following is the contents of a service for nginx. 
+The following is the contents of a service for nginx.  
 Source: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
 ```
 cat nginx-service.yml
