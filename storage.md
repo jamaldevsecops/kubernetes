@@ -59,8 +59,10 @@ spec:
         persistentVolumeClaim:
           claimName: nginx-pv-claim
 ```
+
+
 ```
-cat pv.yml
+cat pv-retain-policy.yml
 ```
 ```
 apiVersion: v1
@@ -79,6 +81,9 @@ spec:
     path: "/mnt/data"
 ```
 ```
+cat pv-delete-policy.yml
+```
+```
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -95,6 +100,27 @@ spec:
     path: "/mnt/data"
 ```
 ```
+cat pv-recycle-policy.yml
+```
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv-volume
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: "/mnt/data"
+```
+
+
+```
 cat pvc.yml
 ```
 ```
@@ -109,6 +135,9 @@ spec:
     requests:
       storage: 1Gi
 ```
+
+
+
 ```
 cat pv-service.yml
 ```
