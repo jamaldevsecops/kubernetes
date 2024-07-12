@@ -1,4 +1,4 @@
-# Static Pod: Schedule a pod on a specific node using ```nodeName```
+# Static Pod: Schedule a pod on a specific node using nodeName
 
 ```
 kubectl get node -o wide
