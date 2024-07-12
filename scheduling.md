@@ -34,7 +34,7 @@ spec:
         - containerPort: 80
 ```
 ```
-kubectl create -f StaticPod-Deployment
+kubectl create -f StaticPod-Deployment.yml
 ```
 ```
 kubectl get pods -o wide
