@@ -66,6 +66,16 @@ worker1   Ready    <none>          31d   v1.28.10   beta.kubernetes.io/arch=amd6
 worker2   Ready    <none>          31d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker2,kubernetes.io/os=linux
 worker3   Ready    <none>          73m   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux,websrv=prod
 ```
+```
+kubectl get nodes -l websrv=prod
+```
+Sample Output:
+```
+NAME      STATUS   ROLES    AGE   VERSION
+worker1   Ready    <none>   31d   v1.28.10
+worker3   Ready    <none>   87m   v1.28.11
+```
+
 YML manifest file: 
 ```
 apiVersion: apps/v1
