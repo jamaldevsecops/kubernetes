@@ -113,21 +113,9 @@ nodeselector-deployment-54cccc9c7f-5hr2b   1/1     Running   0          60s   17
 nodeselector-deployment-54cccc9c7f-5sg7l   1/1     Running   0          60s   172.16.235.132   worker1   <none>           <none>
 nodeselector-deployment-54cccc9c7f-j6cm4   1/1     Running   0          60s   172.16.182.0     worker3   <none>           <none>
 ```
-# Manual Scheduling with nodeAffinity
-```
-kubectl label nodes worker2 environment=development
-```
-```
-kubectl get nodes --show-labels
-```
-Sample Output: 
-```
-NAME      STATUS   ROLES           AGE   VERSION    LABELS
-master1   Ready    control-plane   32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=master1,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
-worker1   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=production,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker1,kubernetes.io/os=linux
-worker2   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=development,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker2,kubernetes.io/os=linux
-worker3   Ready    <none>          19h   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=production,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux
-```
+# Manual Scheduling with nodeAffinity (RequiredDuringSchedulingIgnoredDuringExecution)
+```RequiredDuringSchedulingIgnoredDuringExecution:``` This means that the rule is mandatory for scheduling a pod, but once the pod is scheduled, the rule is not enforced. For example, if a node label changes after the pod is already running, the pod will not be rescheduled.  
+
 YML manifest file: 
 ```
 apiVersion: apps/v1
@@ -177,4 +165,186 @@ NAME                                              READY   STATUS    RESTARTS   A
 nginx-node-affinity-deployment-55b7bb75ff-fqpf8   1/1     Running   0          75s   172.16.235.133   worker1   <none>           <none>
 nginx-node-affinity-deployment-55b7bb75ff-kmpsk   1/1     Running   0          75s   172.16.182.1     worker3   <none>           <none>
 ```
+
+YML manifest file: 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-node-affinity-example2-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      affinity: 
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: datacenter 
+                    operator: In 
+                    values: 
+                      - us-east-1 
+      containers:
+      - name: nginx
+        image: nginx 
+        ports:
+        - containerPort: 80
+```
+```
+kubectl create -f nodeaffinity.yml 
+kubectl get deployments
+```
+Sample Output: 
+```
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-node-affinity-example2-deployment   0/2     2            0           39s
+```
+```
+kubectl get pods -o wide
+```
+Sample Output: 
+```
+NAME                                                      READY   STATUS    RESTARTS   AGE   IP               NODE      NOMINATED NODE   READINESS GATES
+nginx-node-affinity-example2-deployment-89ff99b54-p4nj4   0/1     Pending   0          85s   <none>           <none>    <none>           <none>
+nginx-node-affinity-example2-deployment-89ff99b54-rgjkx   0/1     Pending   0          85s
+```   
+```
+kubectl label nodes worker2 datacenter=us-east-1
+kubectl get pods -o wide
+```
+Sample Output: 
+```
+NAME                                                      READY   STATUS    RESTARTS   AGE     IP               NODE      NOMINATED NODE   READINESS GATES
+nginx-node-affinity-example2-deployment-89ff99b54-p4nj4   1/1     Running   0          4m16s   172.16.189.72    worker2   <none>           <none>
+nginx-node-affinity-example2-deployment-89ff99b54-rgjkx   1/1     Running   0          4m16s   172.16.189.71    worker2   <none>           <none>
+```
+
+# Manual Scheduling with nodeAffinity (PreferredDuringSchedulingIgnoredDuringExecution)
+```PreferredDuringSchedulingIgnoredDuringExecution:``` This means that the rule is preferred but not mandatory for scheduling a pod. The scheduler will try to place the pod on a node that satisfies the rule, but if no such node is available, the pod will still be scheduled. Again, once the pod is scheduled, the rule is not enforced.  '
+
+YML manifest file: 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-node-affinity-example3-deployment 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      affinity: 
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: disktype
+                    operator: In
+                    values: 
+                      - ssd
+              weight: 1
+          
+      containers:
+      - name: nginx
+        image: nginx 
+        ports:
+        - containerPort: 80
+```
+```
+kubectl create -f nodeaffinity.yml
+kubectl get deployment
+```
+Sample Output: 
+```
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-node-affinity-example3-deployment   2/2     2            2           66s
+```
+```
+kubectl get pods -o wide
+```
+Sample Output: 
+```
+NAME                                                       READY   STATUS    RESTARTS   AGE   IP               NODE      NOMINATED NODE   READINESS GATES
+nginx-node-affinity-example3-deployment-746dccfd85-fvn4n   1/1     Running   0          98s   172.16.235.134   worker1   <none>           <none>
+nginx-node-affinity-example3-deployment-746dccfd85-kqmjg   1/1     Running   0          98s   172.16.189.73    worker2   <none>           <none>
+```
+```
+kubectl label nodes worker2 environment=development
+```
+```
+kubectl get nodes --show-labels
+```
+Sample Output: 
+```
+NAME      STATUS   ROLES           AGE   VERSION    LABELS
+master1   Ready    control-plane   32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=master1,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
+worker1   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=production,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker1,kubernetes.io/os=linux
+worker2   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=development,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker2,kubernetes.io/os=linux
+worker3   Ready    <none>          19h   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=production,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux
+```
+YML manifest file: 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-node-affinity-example4-deployment 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      affinity: 
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: disktype
+                    operator: In
+                    values: 
+                      - ssd
+              weight: 1
+            
+            - preference:
+                matchExpressions:
+                  - key: environment 
+                    operator: In 
+                    values:
+                      - development 
+              weight: 2
+          
+      containers:
+      - name: nginx
+        image: nginx 
+        ports:
+        - containerPort: 80
+```
+```
+kubectl create -f nodeaffinity.yml
+kubectl get pods -o wide
+```
+Sample Output: 
+```
+NAME                                                      READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
+nginx-node-affinity-example4-deployment-9f7d784dd-5266j   1/1     Running   0          41s   172.16.189.74   worker2   <none>           <none>
+nginx-node-affinity-example4-deployment-9f7d784dd-hfsmj   1/1     Running   0          41s   172.16.189.75   worker2   <none>           <none>
+
+
+
 
