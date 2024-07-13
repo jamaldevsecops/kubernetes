@@ -128,3 +128,53 @@ worker1   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd6
 worker2   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=development,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker2,kubernetes.io/os=linux
 worker3   Ready    <none>          19h   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=production,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux
 ```
+YML manifest file: 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-node-affinity-deployment 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      affinity: 
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: environment 
+                    operator: In 
+                    values: 
+                      - production 
+      containers:
+      - name: nginx
+        image: nginx 
+        ports:
+        - containerPort: 80
+```
+```
+kubectl create -f nodeaffinity.yml 
+kubectl get deployment
+```
+Sample Output: 
+```
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-node-affinity-deployment   2/2     2            2           57s
+```
+```
+kubectl get pods -o wide
+```
+Sample Output: 
+```
+NAME                                              READY   STATUS    RESTARTS   AGE   IP               NODE      NOMINATED NODE   READINESS GATES
+nginx-node-affinity-deployment-55b7bb75ff-fqpf8   1/1     Running   0          75s   172.16.235.133   worker1   <none>           <none>
+nginx-node-affinity-deployment-55b7bb75ff-kmpsk   1/1     Running   0          75s   172.16.182.1     worker3   <none>           <none>
+```
+
