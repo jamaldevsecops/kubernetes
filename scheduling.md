@@ -95,7 +95,7 @@ spec:
         app: nginx
     spec:
       nodeSelector:
-        websr: prod
+        environment: production
       containers:
       - name: nginx
         image: nginx
