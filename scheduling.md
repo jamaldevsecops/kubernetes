@@ -116,6 +116,7 @@ nodeselector-deployment-54cccc9c7f-5sg7l   1/1     Running   0          60s   17
 nodeselector-deployment-54cccc9c7f-j6cm4   1/1     Running   0          60s   172.16.182.0     worker3   <none>           <none>
 ```
 ### Manual Scheduling with nodeAffinity (RequiredDuringSchedulingIgnoredDuringExecution)
+Ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/  
 ```RequiredDuringSchedulingIgnoredDuringExecution:``` This means that the rule is mandatory for scheduling a pod, but once the pod is scheduled, the rule is not enforced. For example, if a node label changes after the pod is already running, the pod will not be rescheduled.  
 
 ### operator:  
