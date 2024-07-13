@@ -113,6 +113,18 @@ nodeselector-deployment-54cccc9c7f-5hr2b   1/1     Running   0          60s   17
 nodeselector-deployment-54cccc9c7f-5sg7l   1/1     Running   0          60s   172.16.235.132   worker1   <none>           <none>
 nodeselector-deployment-54cccc9c7f-j6cm4   1/1     Running   0          60s   172.16.182.0     worker3   <none>           <none>
 ```
-
-
-
+# Manual Scheduling with nodeAffinity
+```
+kubectl label nodes worker2 environment=development
+```
+```
+kubectl get nodes --show-labels
+```
+Sample Output: 
+```
+NAME      STATUS   ROLES           AGE   VERSION    LABELS
+master1   Ready    control-plane   32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=master1,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
+worker1   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=production,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker1,kubernetes.io/os=linux
+worker2   Ready    <none>          32d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=development,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker2,kubernetes.io/os=linux
+worker3   Ready    <none>          19h   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,environment=production,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux
+```
