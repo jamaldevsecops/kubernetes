@@ -1,4 +1,6 @@
-# Manual Schedule Using nodeName  
+# Manual Scheduling 
+
+### Manual Schedule Using nodeName  
 Note that nodeName is used for Pods, not Deployments. If you want to use a Deployment, you should use nodeSelector, nodeAffinity, or taints and tolerations.
 
 ```
@@ -39,7 +41,7 @@ Sample Output:
 NAME        READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
 staticpod   1/1     Running   0          31s   172.16.189.70   worker2   <none>           <none>
 ```
-# Manual Schedule Using using nodeSelector  
+### Manual Schedule Using using nodeSelector  
 ```
 kubectl get nodes --show-labels
 ```
@@ -113,8 +115,16 @@ nodeselector-deployment-54cccc9c7f-5hr2b   1/1     Running   0          60s   17
 nodeselector-deployment-54cccc9c7f-5sg7l   1/1     Running   0          60s   172.16.235.132   worker1   <none>           <none>
 nodeselector-deployment-54cccc9c7f-j6cm4   1/1     Running   0          60s   172.16.182.0     worker3   <none>           <none>
 ```
-# Manual Scheduling with nodeAffinity (RequiredDuringSchedulingIgnoredDuringExecution)
+### Manual Scheduling with nodeAffinity (RequiredDuringSchedulingIgnoredDuringExecution)
 ```RequiredDuringSchedulingIgnoredDuringExecution:``` This means that the rule is mandatory for scheduling a pod, but once the pod is scheduled, the rule is not enforced. For example, if a node label changes after the pod is already running, the pod will not be rescheduled.  
+
+### operator:  
+The operator field is used in labelSelector to define the relationship between the label key and values. Common operators include:  
+
+```In:``` The label key must have one of the specified values.  
+```NotIn:``` The label key must not have any of the specified values.  
+```Exists:``` The label key must exist.  
+```DoesNotExist:``` The label key must not exist.  
 
 YML manifest file: 
 ```
@@ -140,7 +150,8 @@ spec:
                   - key: environment 
                     operator: In 
                     values: 
-                      - production 
+                      - production
+                      -  
       containers:
       - name: nginx
         image: nginx 
@@ -226,8 +237,8 @@ nginx-node-affinity-example2-deployment-89ff99b54-p4nj4   1/1     Running   0   
 nginx-node-affinity-example2-deployment-89ff99b54-rgjkx   1/1     Running   0          4m16s   172.16.189.71    worker2   <none>           <none>
 ```
 
-# Manual Scheduling with nodeAffinity (PreferredDuringSchedulingIgnoredDuringExecution)
-```PreferredDuringSchedulingIgnoredDuringExecution:``` This means that the rule is preferred but not mandatory for scheduling a pod. The scheduler will try to place the pod on a node that satisfies the rule, but if no such node is available, the pod will still be scheduled. Again, once the pod is scheduled, the rule is not enforced.  '
+### Manual Scheduling with nodeAffinity (PreferredDuringSchedulingIgnoredDuringExecution)
+```PreferredDuringSchedulingIgnoredDuringExecution:``` This means that the rule is preferred but not mandatory for scheduling a pod. The scheduler will try to place the pod on a node that satisfies the rule, but if no such node is available, the pod will still be scheduled. Again, once the pod is scheduled, the rule is not enforced.  
 
 YML manifest file: 
 ```
@@ -344,6 +355,61 @@ Sample Output:
 NAME                                                      READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
 nginx-node-affinity-example4-deployment-9f7d784dd-5266j   1/1     Running   0          41s   172.16.189.74   worker2   <none>           <none>
 nginx-node-affinity-example4-deployment-9f7d784dd-hfsmj   1/1     Running   0          41s   172.16.189.75   worker2   <none>           <none>
+```
+
+YAML manifest file:  
+```NotIn:``` The label key must not have any of the specified values.
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-node-affinity-example5-deployment 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      affinity: 
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: disktype
+                    operator: NotIn
+                    values: 
+                      - ssd
+              weight: 1
+          
+      containers:
+      - name: nginx
+        image: nginx 
+        ports:
+        - containerPort: 80
+```
+```
+kubectl create -f nodeaffinity.yml 
+kubectl get deployments
+```
+Sample Output:
+```
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-node-affinity-example5-deployment   2/2     2            2           10s
+```
+```
+kubectl get pods -o wide
+```
+Sample Output:
+```
+NAME                                                       READY   STATUS    RESTARTS   AGE   IP               NODE      NOMINATED NODE   READINESS GATES
+nginx-node-affinity-example5-deployment-865b979dfb-9jwg7   1/1     Running   0          28s   172.16.189.76    worker2   <none>           <none>
+nginx-node-affinity-example5-deployment-865b979dfb-g5qkm   1/1     Running   0          28s   172.16.235.135   worker1   <none>           <none>
+```
+
 
 
 
