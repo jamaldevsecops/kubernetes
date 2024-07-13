@@ -1,4 +1,4 @@
-# Schedule a pod on a specific node using nodeName  
+# Manual Schedule Using nodeName  
 Note that nodeName is used for Pods, not Deployments. If you want to use a Deployment, you should use nodeSelector, nodeAffinity, or taints and tolerations.
 
 ```
@@ -39,7 +39,7 @@ Sample Output:
 NAME        READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
 staticpod   1/1     Running   0          31s   172.16.189.70   worker2   <none>           <none>
 ```
-# Schedule pod(s) on specific node(s) using nodeSelector  
+# Manual Schedule Using using nodeSelector  
 ```
 kubectl get nodes --show-labels
 ```
@@ -52,8 +52,8 @@ worker2   Ready    <none>          31d   v1.28.10   beta.kubernetes.io/arch=amd6
 worker3   Ready    <none>          66m   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux
 ```
 ```
-kubectl label nodes worker1 websrv=prod
-kubectl label nodes worker3 websrv=prod
+kubectl label nodes worker1 environment=production
+kubectl label nodes worker3 environment=production
 ```
 ```
 kubectl get nodes --show-labels
@@ -62,12 +62,12 @@ Sample Output:
 ```
 NAME      STATUS   ROLES           AGE   VERSION    LABELS
 master1   Ready    control-plane   31d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=master1,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
-worker1   Ready    <none>          31d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker1,kubernetes.io/os=linux,websrv=prod
+worker1   Ready    <none>          31d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker1,kubernetes.io/os=linux,environment=production
 worker2   Ready    <none>          31d   v1.28.10   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker2,kubernetes.io/os=linux
-worker3   Ready    <none>          73m   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux,websrv=prod
+worker3   Ready    <none>          73m   v1.28.11   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=worker3,kubernetes.io/os=linux,environment=production
 ```
 ```
-kubectl get nodes -l websrv=prod
+kubectl get nodes -l environment=production
 ```
 Sample Output:
 ```
@@ -93,7 +93,7 @@ spec:
         app: nginx
     spec:
       nodeSelector:
-        websrv: prod
+        websr: prod
       containers:
       - name: nginx
         image: nginx
