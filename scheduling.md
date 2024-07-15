@@ -152,7 +152,7 @@ spec:
                     operator: In 
                     values: 
                       - production
-                      -  
+
       containers:
       - name: nginx
         image: nginx 
