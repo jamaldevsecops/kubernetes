@@ -413,11 +413,11 @@ nginx-node-affinity-example5-deployment-865b979dfb-g5qkm   1/1     Running   0  
 
 
 
-### Taints and Tolerations
+# Taints and Tolerations
 
 Taints and tolerations in Kubernetes are used in various real-life scenarios to ensure that pods are scheduled appropriately on nodes. Here are some practical examples:
 
-# 1. Isolating Critical Workloads
+### 1. Isolating Critical Workloads
 
 Suppose you have a set of nodes dedicated to running critical workloads and you want to prevent non-critical workloads from being scheduled on these nodes.  
 
@@ -451,7 +451,7 @@ spec:
       - name: critical-app
         image: my-critical-app:latest
 ```
-# 2. Maintenance Nodes  
+### 2. Maintenance Nodes  
 
 You may want to drain nodes for maintenance without disrupting running workloads immediately but prevent new pods from being scheduled.  
 
@@ -484,7 +484,7 @@ spec:
       - name: tolerating-app
         image: my-tolerating-app:latest
 ```
-# 3. Dedicated Nodes for GPU Workloads
+### 3. Dedicated Nodes for GPU Workloads
 
 Nodes with GPUs are expensive and should be dedicated to workloads that require them.  
 
@@ -521,7 +521,7 @@ spec:
           limits:
             nvidia.com/gpu: 1
 ```
-# 4. Prefer Avoiding Nodes with Issues
+### 4. Prefer Avoiding Nodes with Issues
 
 Nodes in certain zones might have intermittent network issues. You might prefer to avoid scheduling pods there but allow it if necessary.  
 
