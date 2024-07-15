@@ -23,3 +23,35 @@ Example Calculations
 	•	CPU:
 	•	250m means 250 millicores.
 	•	In cores: 250 millicores = 250 / 1000 cores = 0.25 cores.
+
+### Resource Requests and Limits
+Resource Requests: This is the amount of CPU and memory that Kubernetes guarantees to a container. The scheduler uses this information to decide on which node to place the pod.
+
+Resource Limits: This is the maximum amount of CPU and memory that a container is allowed to use. If a container tries to exceed its limit, it may be throttled (CPU) or killed (memory).
+
+Setting Resource Limits
+Resource requests and limits are defined in the pod or container specification within your YAML configuration file.
+
+Example
+Here's an example of setting resource requests and limits for a container in a pod:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-demo
+  namespace: default
+spec:
+  containers:
+  - name: resource-demo-container
+    image: nginx
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+```
+```
+kubectl apply -f resource-demo-pod.yaml
+```
