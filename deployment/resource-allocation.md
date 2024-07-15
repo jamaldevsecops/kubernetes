@@ -58,7 +58,7 @@ kubectl top pod resource-demo
 2. Monitor and adjust: Continuously monitor resource usage and adjust requests and limits as necessary.
 3. Use resource quotas: In larger clusters, use ResourceQuotas to limit the total resource consumption of a namespace to prevent resource exhaustion.
 
-### Resource Quotas
+# Resource Quotas
 To ensure fair resource distribution among different teams or applications, you can use ResourceQuotas.
 Example
 ```
