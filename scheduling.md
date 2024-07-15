@@ -413,5 +413,148 @@ nginx-node-affinity-example5-deployment-865b979dfb-g5qkm   1/1     Running   0  
 
 
 
+### Taints and Tolerations
+
+Taints and tolerations in Kubernetes are used in various real-life scenarios to ensure that pods are scheduled appropriately on nodes. Here are some practical examples:
+
+# 1. Isolating Critical Workloads
+
+Suppose you have a set of nodes dedicated to running critical workloads and you want to prevent non-critical workloads from being scheduled on these nodes.  
+
+Taint the Node
+```
+kubectl taint nodes worker1 critical=true:NoSchedule
+kubectl taint nodes worker2 critical=true:NoSchedule
+```
+Tolerate the Taint in Deployment
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: critical-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: critical-app
+  template:
+    metadata:
+      labels:
+        app: critical-app
+    spec:
+      tolerations:
+      - key: "critical"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      containers:
+      - name: critical-app
+        image: my-critical-app:latest
+```
+# 2. Maintenance Nodes  
+
+You may want to drain nodes for maintenance without disrupting running workloads immediately but prevent new pods from being scheduled.  
+
+Taint the Nodes  
+```
+kubectl taint nodes worker3 maintenance=true:NoExecute
+```
+Tolerate the Taint in Deployment (if some pods can tolerate being on maintenance nodes)  
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tolerating-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tolerating-app
+  template:
+    metadata:
+      labels:
+        app: tolerating-app
+    spec:
+      tolerations:
+      - key: "maintenance"
+        operator: "Equal"
+        value: "true"
+        effect: "NoExecute"
+      containers:
+      - name: tolerating-app
+        image: my-tolerating-app:latest
+```
+# 3. Dedicated Nodes for GPU Workloads
+
+Nodes with GPUs are expensive and should be dedicated to workloads that require them.  
+
+Taint the Nodes  
+```
+kubectl taint nodes worker1 gpu=true:NoSchedule
+kubectl taint nodes worker2 gpu=true:NoSchedule
+```
+Tolerate the Taint in Deployment  
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpu-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gpu-app
+  template:
+    metadata:
+      labels:
+        app: gpu-app
+    spec:
+      tolerations:
+      - key: "gpu"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      containers:
+      - name: gpu-app
+        image: my-gpu-app:latest
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+```
+# 4. Prefer Avoiding Nodes with Issues
+
+Nodes in certain zones might have intermittent network issues. You might prefer to avoid scheduling pods there but allow it if necessary.  
+
+Taint the Nodes  
+```
+kubectl taint nodes worker1 network-issues=true:PreferNoSchedule
+kubectl taint nodes worker2 network-issues=true:PreferNoSchedule
+```
+Tolerate the Taint in Deployment  
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resilient-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: resilient-app
+  template:
+    metadata:
+      labels:
+        app: resilient-app
+    spec:
+      tolerations:
+      - key: "network-issues"
+        operator: "Exists"
+        effect: "PreferNoSchedule"
+      containers:
+      - name: resilient-app
+        image: my-resilient-app:latest
+```
+
+
 
 
