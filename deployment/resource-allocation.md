@@ -82,7 +82,7 @@ kubectl get resourcequota -n default
 This ensures that the default namespace cannot exceed the specified resource limits.
 
 
-### Scenario 1: Web Application
+### Real Life Scenario 1: Web Application
 For a typical web application, you might have a deployment with an NGINX frontend and a Node.js backend.
 
 **NGINX Frontend**
@@ -149,7 +149,7 @@ spec:
 **requests:** Guarantees that each Node.js pod gets at least 256Mi of memory and 200m of CPU.
 **limits:** Ensures that each Node.js pod does not exceed 512Mi of memory and 500m of CPU.
 
-###  Scenario 2: Machine Learning Application
+### Real Life Scenario 2: Machine Learning Application
 A machine learning application might use TensorFlow and could require significant resources.
 
 ```
@@ -179,7 +179,7 @@ spec:
             cpu: "2"
 ```
 
-### Scenario 3: Database Application
+### Real Life Scenario 3: Database Application
 For a database application like MySQL, you need to ensure that it has enough memory and CPU to handle queries efficiently.
 
 ```
@@ -212,7 +212,7 @@ spec:
             cpu: "1"
 ```
 
-### Scenario 4: CI/CD Pipeline
+### Real Life Scenario 4: CI/CD Pipeline
 For a CI/CD pipeline using Jenkins, which can be resource-intensive during builds:
 
 ```
