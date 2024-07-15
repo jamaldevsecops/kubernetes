@@ -417,6 +417,15 @@ nginx-node-affinity-example5-deployment-865b979dfb-g5qkm   1/1     Running   0  
 
 Taints and tolerations in Kubernetes are used in various real-life scenarios to ensure that pods are scheduled appropriately on nodes. Here are some practical examples:
 
+•	Operators:
+```Exists```: Matches taints with the specified key, regardless of value.
+```Equal```: Matches taints with the specified key and value.
+
+•	Effects:
+```NoSchedule```: Prevents scheduling pods that do not tolerate the taint.
+```PreferNoSchedule```: Tries to avoid scheduling pods that do not tolerate the taint but is not strict.
+```NoExecute```: Evicts existing pods that do not tolerate the taint and prevents new pods from being scheduled on the node.
+
 ### 1. Isolating Critical Workloads
 
 Suppose you have a set of nodes dedicated to running critical workloads and you want to prevent non-critical workloads from being scheduled on these nodes.  
