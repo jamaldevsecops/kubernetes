@@ -33,7 +33,6 @@ Setting Resource Limits
 Resource requests and limits are defined in the pod or container specification within your YAML configuration file.
 
 Example
-Here's an example of setting resource requests and limits for a container in a pod:
 ```
 apiVersion: v1
 kind: Pod
@@ -55,3 +54,196 @@ spec:
 ```
 kubectl apply -f resource-demo-pod.yaml
 ```
+Checking Resource Usage
+You can check the resource usage of your pods using the kubectl top command, which requires the Metrics Server to be installed in your cluster:
+```
+kubectl top pod resource-demo
+```
+Best Practices
+Set realistic resource requests and limits: Base these on observed usage and benchmarking to ensure efficient use of resources.
+Monitor and adjust: Continuously monitor resource usage and adjust requests and limits as necessary.
+Use resource quotas: In larger clusters, use ResourceQuotas to limit the total resource consumption of a namespace to prevent resource exhaustion.
+Resource Quotas
+To ensure fair resource distribution among different teams or applications, you can use ResourceQuotas.
+
+Example
+```
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: resource-quota
+  namespace: default
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: "8Gi"
+    limits.cpu: "8"
+    limits.memory: "16Gi"
+```
+```
+kubectl apply -f resource-quota.yaml
+kubectl get resourcequota -n default
+```
+### Scenario 1: Web Application
+For a typical web application, you might have a deployment with an NGINX frontend and a Node.js backend.
+
+NGINX Frontend
+NGINX is usually lightweight and doesn’t need a lot of resources.
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+```
+requests: Guarantees that each NGINX pod gets at least 64Mi of memory and 100m of CPU.
+limits: Ensures that each NGINX pod does not exceed 128Mi of memory and 200m of CPU.
+Node.js Backend
+Node.js might require more resources, especially under load.
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nodejs
+  template:
+    metadata:
+      labels:
+        app: nodejs
+    spec:
+      containers:
+      - name: nodejs
+        image: node:14
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+```
+requests: Guarantees that each Node.js pod gets at least 256Mi of memory and 200m of CPU.
+limits: Ensures that each Node.js pod does not exceed 512Mi of memory and 500m of CPU.
+Scenario 2: Machine Learning Application
+A machine learning application might use TensorFlow and could require significant resources.
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ml-app
+  template:
+    metadata:
+      labels:
+        app: ml-app
+    spec:
+      containers:
+      - name: tensorflow
+        image: tensorflow/tensorflow:latest
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+```
+requests: Guarantees that each TensorFlow pod gets at least 2Gi of memory and 1 CPU core.
+limits: Ensures that each TensorFlow pod does not exceed 4Gi of memory and 2 CPU cores.
+Scenario 3: Database Application
+For a database application like MySQL, you need to ensure that it has enough memory and CPU to handle queries efficiently.
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "password"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+```
+requests: Guarantees that the MySQL pod gets at least 1Gi of memory and 500m of CPU.
+limits: Ensures that the MySQL pod does not exceed 2Gi of memory and 1 CPU core.
+Scenario 4: CI/CD Pipeline
+For a CI/CD pipeline using Jenkins, which can be resource-intensive during builds:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+```
+requests: Guarantees that the Jenkins pod gets at least 2Gi of memory and 1 CPU core.
+limits: Ensures that the Jenkins pod does not exceed 4Gi of memory and 2 CPU cores.
+
