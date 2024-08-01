@@ -31,7 +31,7 @@ Example Calculations
 **Resource Limits:** This is the maximum amount of CPU and memory that a container is allowed to use. If a container tries to exceed its limit, it may be throttled (CPU) or killed (memory).
 
 Example
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -49,7 +49,7 @@ spec:
         memory: "128Mi"
         cpu: "500m"
 ```
-```
+```sh
 kubectl apply -f resource-demo-pod.yaml
 kubectl top pod resource-demo
 ```
@@ -61,7 +61,7 @@ kubectl top pod resource-demo
 # Resource Quotas
 To ensure fair resource distribution among different teams or applications, you can use ResourceQuotas.
 Example
-```
+```yaml
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -75,7 +75,7 @@ spec:
     limits.cpu: "8"
     limits.memory: "16Gi"
 ```
-```
+```sh
 kubectl apply -f resource-quota.yaml
 kubectl get resourcequota -n default
 ```
@@ -88,7 +88,7 @@ For a typical web application, you might have a deployment with an NGINX fronten
 **NGINX Frontend**
 NGINX is usually lightweight and doesn’t need a lot of resources.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -120,7 +120,7 @@ spec:
 **Node.js Backend**
 Node.js might require more resources, especially under load.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -152,7 +152,7 @@ spec:
 ### Real Life Scenario 2: Machine Learning Application
 A machine learning application might use TensorFlow and could require significant resources.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -182,7 +182,7 @@ spec:
 ### Real Life Scenario 3: Database Application
 For a database application like MySQL, you need to ensure that it has enough memory and CPU to handle queries efficiently.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -215,7 +215,7 @@ spec:
 ### Real Life Scenario 4: CI/CD Pipeline
 For a CI/CD pipeline using Jenkins, which can be resource-intensive during builds:
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
