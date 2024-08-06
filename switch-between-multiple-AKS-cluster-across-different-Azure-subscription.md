@@ -24,7 +24,7 @@ You need to log in to Azure, set the subscription context, and get credentials f
 
 3. **Get credentials for AKS Cluster 1:**
    ```sh
-   az aks get-credentials --resource-group ABC-RG --name ABC-AKS-CLUSTER --context c
+   az aks get-credentials --resource-group ABC-RG --name ABC-AKS-CLUSTER --context abc-aks-cluster
    ```
 
    Here, `abc-aks-cluster` is a context name you are assigning to the first cluster.
