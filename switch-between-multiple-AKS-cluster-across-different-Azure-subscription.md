@@ -71,3 +71,11 @@ After configuring the credentials for both clusters, you can list and switch bet
    kubectl config use-context abc-aks-cluster
    kubectl config use-context xzy-aks-cluster
    ```
+
+
+### 4. Remove a Specific Context
+
+To remove a specific context, use the following command:
+   ```sh
+   kubectl config delete-context <context-name>
+   ```
