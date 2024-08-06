@@ -19,15 +19,15 @@ You need to log in to Azure, set the subscription context, and get credentials f
 
 2. **Set the subscription context:**
    ```sh
-   az account set --subscription sdfsdfds-sdfsdfsdf-sfsdfdsf
+   az account set --subscription aaa-bbb-ccc-ddd-eee
    ```
 
 3. **Get credentials for AKS Cluster 1:**
    ```sh
-   az aks get-credentials --resource-group abc-RG --name abc-aks-k8s --context aks-cluster-1
+   az aks get-credentials --resource-group ABC-RG --name ABC-AKS-CLUSTER --context c
    ```
 
-   Here, `aks-cluster-1` is a context name you are assigning to the first cluster.
+   Here, `abc-aks-cluster` is a context name you are assigning to the first cluster.
 
 #### **For AKS Cluster 2:**
 
@@ -40,12 +40,12 @@ You need to log in to Azure, set the subscription context, and get credentials f
 
 2. **Set the subscription context:**
    ```sh
-   az account set --subscription qwerwer-qewerwer0w-werwerwr
+   az account set --subscription ppp-qqq-rrr-sss-ttt
    ```
 
 3. **Get credentials for AKS Cluster 2:**
    ```sh
-   az aks get-credentials --resource-group xyz-RG --name xyz-aks-k8s --context aks-cluster-2
+   az aks get-credentials --resource-group XYZ-RG --name XYZ-AKS-CLUSTER --context xzy-aks-cluster
    ```
 
    Here, `aks-cluster-2` is a context name you are assigning to the second cluster.
@@ -61,21 +61,13 @@ After configuring the credentials for both clusters, you can list and switch bet
 
    Example output:
    ```sh
-   CURRENT   NAME            CLUSTER           AUTHINFO        NAMESPACE
-   *         aks-cluster-1   abc-aks-k8s       user-abc-aks    default
-             aks-cluster-2   xyz-aks-k8s       user-xyz-aks    default
+   CURRENT   NAME                CLUSTER             AUTHINFO                                                      NAMESPACE
+   *         abc-aks-cluster   abc-aks-cluster   clusterUser_ABC-RG_ABC-AKS-CLUSTER   
+             xzy-aks-cluster   xzy-aks-cluster   clusterUser_XYZ-RG_XYZ-AKS-CLUSTER 
    ```
-
+   
 2. **Switch to a different context:**
    ```sh
-   kubectl config use-context aks-cluster-1
-   kubectl config use-context aks-cluster-2
+   kubectl config use-context abc-aks-cluster
+   kubectl config use-context xzy-aks-cluster
    ```
-
-### Summary
-
-- **Log in to Azure** and set the subscription context for each cluster.
-- **Get credentials** for each AKS cluster and assign a unique context name.
-- **List and switch** between contexts using `kubectl`.
-
-This approach helps you manage multiple AKS clusters efficiently, even when they are in different subscriptions and have different Azure accounts.
