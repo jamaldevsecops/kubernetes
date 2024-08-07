@@ -242,3 +242,131 @@ spec:
 This configuration ensures a controlled, gradual rollout with a balance between availability and the speed of deployment.
 
 
+Rollback in Kubernetes refers to reverting a deployment to a previous version if the current deployment has issues. This can be crucial for maintaining application stability. Kubernetes stores the history of deployments, allowing you to quickly revert to a previous version if needed.
+
+### Rolling Back a Deployment
+
+To demonstrate a rollback, let's use the `nginx` deployment example where we update from `nginx:1.19` to `nginx:1.20`. If the new version has issues, we can roll back to the previous version.
+
+#### Step-by-Step Example:
+
+1. **Initial Deployment:**
+   ```yaml
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: nginx-deployment
+   spec:
+     replicas: 10
+     selector:
+       matchLabels:
+         app: nginx
+     template:
+       metadata:
+         labels:
+           app: nginx
+       spec:
+         containers:
+         - name: nginx
+           image: nginx:1.19
+           ports:
+           - containerPort: 80
+   ```
+
+2. **Updating to a New Version (nginx:1.20):**
+   ```yaml
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: nginx-deployment
+   spec:
+     replicas: 10
+     strategy:
+       type: RollingUpdate
+       rollingUpdate:
+         maxUnavailable: 20%
+         maxSurge: 30%
+     minReadySeconds: 10
+     selector:
+       matchLabels:
+         app: nginx
+     template:
+       metadata:
+         labels:
+           app: nginx
+       spec:
+         containers:
+         - name: nginx
+           image: nginx:1.20
+           ports:
+           - containerPort: 80
+   ```
+
+3. **Rollback to the Previous Version (nginx:1.19):**
+
+   To rollback to the previous version, use the following command:
+
+   ```sh
+   kubectl rollout undo deployment/nginx-deployment
+   ```
+
+   This command reverts the deployment to the previous version. If you need to rollback to a specific revision, you can check the revision history and specify the revision number.
+
+4. **Check Revision History:**
+   ```sh
+   kubectl rollout history deployment/nginx-deployment
+   ```
+
+   This command lists the revision history of the deployment. Each revision has a unique number, which you can use for a specific rollback.
+
+5. **Rollback to a Specific Revision:**
+   ```sh
+   kubectl rollout undo deployment/nginx-deployment --to-revision=1
+   ```
+
+   Replace `1` with the desired revision number.
+
+### Example Commands and Outputs
+
+- **Update the Deployment:**
+  ```sh
+  kubectl apply -f nginx-deployment.yaml
+  ```
+
+- **Check Rollout Status:**
+  ```sh
+  kubectl rollout status deployment/nginx-deployment
+  ```
+
+- **Check Revision History:**
+  ```sh
+  kubectl rollout history deployment/nginx-deployment
+  ```
+
+  **Sample Output:**
+  ```
+  deployment.apps/nginx-deployment
+  REVISION  CHANGE-CAUSE
+  1         <none>
+  2         <none>
+  ```
+
+- **Rollback to Previous Revision:**
+  ```sh
+  kubectl rollout undo deployment/nginx-deployment
+  ```
+
+- **Rollback to a Specific Revision:**
+  ```sh
+  kubectl rollout undo deployment/nginx-deployment --to-revision=1
+  ```
+
+### Ensuring a Safe Rollback
+
+- **Monitor the Rollback:** Use `kubectl rollout status` to monitor the status of the rollback and ensure that it completes successfully.
+- **Check Logs:** Check the logs of the pods to diagnose issues that caused the rollback.
+- **Update Strategy:** Consider refining your update strategy (e.g., canary deployment) to reduce the risk of issues in future updates.
+
+Rolling back a deployment is a powerful feature that ensures you can quickly restore service if a new deployment has issues. By monitoring deployments and maintaining good version control practices, you can minimize the impact of any issues that arise.
+
+
