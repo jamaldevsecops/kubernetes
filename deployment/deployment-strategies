@@ -1,0 +1,185 @@
+Kubernetes offers several deployment strategies to manage the release of new versions of applications. These strategies help ensure smooth transitions with minimal downtime and can accommodate various application needs. Here are the main Kubernetes deployment strategies:
+
+### 1. **Recreate Deployment**
+In this strategy, all old versions of the application are stopped before new ones are created.
+
+**Pros:**
+- Simple to implement.
+- No overlap between old and new versions.
+
+**Cons:**
+- Causes downtime.
+
+**Example:**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recreate-deployment
+spec:
+  strategy:
+    type: Recreate
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: myapp:2.0
+```
+
+### 2. **Rolling Update**
+The rolling update strategy gradually replaces old versions of pods with new ones. This ensures that some instances of the application remain available during the update process.
+
+**Pros:**
+- Minimal downtime.
+- Can control the speed of the update.
+
+**Cons:**
+- Requires careful monitoring.
+
+**Example:**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-update-deployment
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: myapp:2.0
+```
+
+### 3. **Blue-Green Deployment**
+In blue-green deployments, two environments (blue and green) are maintained. The new version (green) is deployed alongside the old version (blue). Once the new version is verified, traffic is switched to the new version.
+
+**Pros:**
+- No downtime.
+- Easy rollback.
+
+**Cons:**
+- Requires more resources.
+
+**Example:**
+- Deploy the new version in a separate environment.
+- Switch the service to point to the new version.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  selector:
+    app: myapp-green
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+```
+
+### 4. **Canary Deployment**
+In canary deployments, a small subset of users is directed to the new version of the application. If the new version performs well, the rollout continues until all users are on the new version.
+
+**Pros:**
+- Controlled, gradual rollout.
+- Can test new features in production.
+
+**Cons:**
+- More complex to manage.
+
+**Example:**
+- Deploy a small number of pods with the new version.
+- Gradually increase the number of new version pods.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canary-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: canary
+    spec:
+      containers:
+      - name: myapp
+        image: myapp:2.0
+```
+
+### Real-life Example of Rolling Update with nginx
+
+Let's use the nginx image for a rolling update deployment. Assume we start with nginx:1.19 and want to update to nginx:1.20.
+
+**Initial Deployment:**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19
+        ports:
+        - containerPort: 80
+```
+
+**Update to nginx:1.20:**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80
+```
+
+In this example, the rolling update will replace one pod at a time, ensuring that there are always at least two pods running during the update. The `maxUnavailable` and `maxSurge` parameters control the update process, where `maxUnavailable` specifies the maximum number of pods that can be unavailable during the update, and `maxSurge` specifies the maximum number of pods that can be created above the desired number of replicas.
