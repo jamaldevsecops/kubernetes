@@ -183,3 +183,62 @@ spec:
 ```
 
 In this example, the rolling update will replace one pod at a time, ensuring that there are always at least two pods running during the update. The `maxUnavailable` and `maxSurge` parameters control the update process, where `maxUnavailable` specifies the maximum number of pods that can be unavailable during the update, and `maxSurge` specifies the maximum number of pods that can be created above the desired number of replicas.
+
+
+### Rolling Update with Percentage and minReadySeconds
+
+To control a rolling update using percentages and to ensure that new pods are ready before terminating old ones, you can use the `maxUnavailable`, `maxSurge`, and `minReadySeconds` settings in your deployment strategy.
+
+- **`maxUnavailable`**: This specifies the maximum number of pods that can be unavailable during the update process, defined as either an integer or a percentage.
+- **`maxSurge`**: This specifies the maximum number of pods that can be created above the desired number of replicas, defined as either an integer or a percentage.
+- **`minReadySeconds`**: This specifies the minimum number of seconds a newly created pod should be ready without any of its containers crashing to be considered available.
+
+Here's how you can define a rolling update with these parameters:
+
+### Example: Rolling Update with Percentage and minReadySeconds
+
+Let's assume we have a deployment of `nginx` with 10 replicas. We want to update from `nginx:1.19` to `nginx:1.20`, allowing up to 20% of the pods to be unavailable during the update and allowing up to 30% surge pods. We also want each new pod to be ready for at least 10 seconds before considering it available.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 20%       # Allow up to 20% of pods to be unavailable during the update
+      maxSurge: 30%             # Allow up to 30% more pods than the desired number of replicas
+  minReadySeconds: 10           # Each new pod must be ready for at least 10 seconds before being considered available
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80
+```
+
+### Explanation:
+
+- **`maxUnavailable: 20%`**: With 10 replicas, up to 2 pods (20% of 10) can be unavailable during the update process.
+- **`maxSurge: 30%`**: With 10 replicas, up to 3 additional pods (30% of 10) can be created during the update process, allowing a total of 13 pods running temporarily.
+- **`minReadySeconds: 10`**: Each new pod must be ready for at least 10 seconds before Kubernetes considers it available, which helps ensure stability before proceeding with the next update step.
+
+### How it Works:
+1. Kubernetes creates new pods with the updated version (`nginx:1.20`).
+2. It ensures each new pod runs for at least 10 seconds without crashing (`minReadySeconds: 10`).
+3. It gradually terminates old pods (`nginx:1.19`) while respecting the `maxUnavailable` and `maxSurge` limits.
+4. The process continues until all old pods are replaced by new pods.
+
+This configuration ensures a controlled, gradual rollout with a balance between availability and the speed of deployment.
+
+
