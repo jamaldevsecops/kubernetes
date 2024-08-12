@@ -19,7 +19,7 @@ Here is a step-by-step guide to installing MetalLB using Kubernetes manifests.
     kubectl create namespace metallb-system
     ```
 
-2. **Apply the MetalLB manifests**:
+2. **Apply the MetalLB manifests**:  
    source: https://metallb.io/installation/  
     ```sh
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
