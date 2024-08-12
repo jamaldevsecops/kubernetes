@@ -20,8 +20,9 @@ Here is a step-by-step guide to installing MetalLB using Kubernetes manifests.
     ```
 
 2. **Apply the MetalLB manifests**:
+   source: https://metallb.io/installation/  
     ```sh
-    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/manifests/metallb.yaml
+    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
     ```
 
 ### Step 2: Configure MetalLB
