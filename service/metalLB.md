@@ -14,44 +14,51 @@ Here is a step-by-step guide to installing MetalLB using Kubernetes manifests.
 
 ### Step 1: Install MetalLB
 
-1. **Create the MetalLB namespace**:
-    ```sh
-    kubectl create namespace metallb-system
-    ```
-
-2. **Apply the MetalLB manifests**:  
+ **Apply the MetalLB manifests**:  
    source: https://metallb.io/installation/  
     ```sh
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
+    kubectl get pods -n metallb-system
     ```
 
 ### Step 2: Configure MetalLB
 
-1. **Create a ConfigMap for MetalLB configuration**:
+1. **Create a IPAddressPool and L2Advertisement for MetalLB configuration**:
     You need to define an address pool and mode of operation (Layer 2 or BGP).
 
-    - **Layer 2 Configuration**:
-      Create a file named `metallb-config.yaml`:
+    - **IPAddressPool Configuration**:
+      Create a file named `IPAddressPool.yaml`:
       ```yaml
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        namespace: metallb-system
-        name: config
-      data:
-        config: |
-          address-pools:
-          - name: default
-            protocol: layer2
-            addresses:
-            - 192.168.1.240-192.168.1.250
+	   apiVersion: metallb.io/v1beta1
+	   kind: IPAddressPool
+	   metadata:
+	     name: metallb-ip-pool
+	     namespace: metallb-system
+	   spec:
+	     addresses:
+	     - 192.168.69.11-192.168.69.254
       ```
       Make sure to replace the IP address range with a range suitable for your network.
 
-2. **Apply the ConfigMap**:
+    - **L2Advertisement Configuration**:
+      Create a file named `L2Advertisement.yaml`:
+      ```yaml
+	   apiVersion: metallb.io/v1beta1
+	   kind: L2Advertisement
+	   metadata:
+	     name: l2-advertisement
+	     namespace: metallb-system
+	   spec:
+	     ipAddressPools:
+	     - metallb-ip-pool
+      ```
+
+2. **Apply the IPAddressPool and L2Advertisement**:
     ```sh
-    kubectl apply -f metallb-config.yaml
+    kubectl apply -f IPAddressPool.yaml
+    kubectl apply -f L2Advertisement.yaml
     ```
+
 
 ### Verification
 
