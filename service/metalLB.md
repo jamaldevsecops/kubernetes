@@ -16,10 +16,10 @@ Here is a step-by-step guide to installing MetalLB using Kubernetes manifests.
 
  **Apply the MetalLB manifests**:  
    source: https://metallb.io/installation/  
-    ```sh
+```sh
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
     kubectl get pods -n metallb-system
-    ```
+```
 
 ### Step 2: Configure MetalLB
 
@@ -57,6 +57,10 @@ Here is a step-by-step guide to installing MetalLB using Kubernetes manifests.
     ```sh
     kubectl apply -f IPAddressPool.yaml
     kubectl apply -f L2Advertisement.yaml
+    ```
+    ```sh
+    kubectl get ipaddresspools -n metallb-system
+    kubectl get l2advertisements -n metallb-system
     ```
 
 
