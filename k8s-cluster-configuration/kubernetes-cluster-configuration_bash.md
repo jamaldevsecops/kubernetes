@@ -2,12 +2,12 @@ Here is a Bash script that automates the configuration of a Kubernetes cluster o
 ```sh
 #!/bin/bash
 
-# 1. Set hostname to 'master1'
-sudo hostnamectl set-hostname master1
-echo "Hostname set to master1"
+# 1. Set hostname to 'controlplane'
+sudo hostnamectl set-hostname controlplane
+echo "Hostname set to controlplane"
 
 # 2. Update /etc/hosts
-grep -qxF '127.0.1.1 master1' /etc/hosts || echo '127.0.1.1 master1' | sudo tee -a /etc/hosts
+grep -qxF '127.0.1.1 controlplane' /etc/hosts || echo '127.0.1.1 controlplane' | sudo tee -a /etc/hosts
 echo "Updated /etc/hosts"
 
 # 3. Comment swap entries in /etc/fstab
