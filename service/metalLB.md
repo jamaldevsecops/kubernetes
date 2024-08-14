@@ -12,7 +12,26 @@ MetalLB is a load-balancer implementation for Kubernetes clusters running on bar
 
 Here is a step-by-step guide to installing MetalLB using Kubernetes manifests.
 
-### Step 1: Install MetalLB
+### Step 1: Pre-requiste
+
+ **Enable staticARP**:  
+```sh
+kubectl edit configmap -n kube-system kube-proxy
+```
+Change the value of `staticARP` from `false` to `true`
+```
+    ipvs:
+      excludeCIDRs: null
+      minSyncPeriod: 0s
+      scheduler: ""
+      strictARP: true
+      syncPeriod: 0s
+      tcpFinTimeout: 0s
+      tcpTimeout: 0s
+      udpTimeout: 0s
+```
+
+### Step 2: Install MetalLB
 
  **Apply the MetalLB manifests**:  
    source: https://metallb.io/installation/  
@@ -21,7 +40,7 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/confi
 kubectl get pods -n metallb-system
 ```
 
-### Step 2: Configure MetalLB
+### Step 3: Configure MetalLB
 
 1. **Create a IPAddressPool and L2Advertisement for MetalLB configuration**:
     You need to define an address pool and mode of operation (Layer 2 or BGP).
