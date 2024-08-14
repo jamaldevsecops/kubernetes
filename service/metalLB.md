@@ -12,7 +12,7 @@ MetalLB is a load-balancer implementation for Kubernetes clusters running on bar
 
 Here is a step-by-step guide to installing MetalLB using Kubernetes manifests.
 
-### Step 1: Pre-requiste
+### Step 1: Pre-requisite
 
  **Enable staticARP**:  
 ```sh
