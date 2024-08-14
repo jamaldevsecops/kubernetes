@@ -92,6 +92,9 @@ kubectl get nodes
 kubectl get pods -n kube-system
 
 # 16. Generate tokens for three worker nodes.
+echo "Use the following token to add worker node1"
 kubeadm token create --print-join-command
+echo "Use the following token to add worker node2"
 kubeadm token create --print-join-command
+echo "Use the following token to add worker node3"
 kubeadm token create --print-join-command
