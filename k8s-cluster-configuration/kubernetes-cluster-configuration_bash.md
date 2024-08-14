@@ -84,9 +84,14 @@ echo "Calico network plugin installed"
 echo "Waiting for Calico to initialize..."
 while ! kubectl get nodes | grep -q "Ready"; do
   echo "Waiting for nodes to be ready..."
-  sleep 5
+  sleep 15
 done
 
 # 15. Final verification of nodes and system pods
 kubectl get nodes
 kubectl get pods -n kube-system
+
+# 16. Generate tokens for three worker nodes.
+kubeadm token create --print-join-command
+kubeadm token create --print-join-command
+kubeadm token create --print-join-command
