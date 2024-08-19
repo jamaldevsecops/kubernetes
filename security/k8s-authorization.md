@@ -4,10 +4,6 @@ Authorization in Kubernetes (K8S) is a key part of its security model, determini
    - **Roles and RoleBindings**: 
      - **Roles** define permissions within a specific namespace. They contain rules that specify the actions allowed on resources (e.g., `get`, `list`, `create` on `pods`, `services`, etc.).
      - **RoleBindings** associate a Role with a user, group, or service account, granting the permissions defined in the Role to that entity within a specific namespace.
-   - **ClusterRoles and ClusterRoleBindings**:
-     - **ClusterRoles** are similar to Roles but apply across the entire cluster, not just within a single namespace.
-     - **ClusterRoleBindings** associate a ClusterRole with users, groups, or service accounts, granting permissions cluster-wide.
-
    Example:
    ```yaml
    # Role definition in a namespace
@@ -20,7 +16,8 @@ Authorization in Kubernetes (K8S) is a key part of its security model, determini
    - apiGroups: [""]
      resources: ["pods"]
      verbs: ["get", "list"]
-   
+   ```
+	```yaml
    # RoleBinding to bind the Role to a user
    kind: RoleBinding
    apiVersion: rbac.authorization.k8s.io/v1
@@ -36,6 +33,41 @@ Authorization in Kubernetes (K8S) is a key part of its security model, determini
      name: pod-reader
      apiGroup: rbac.authorization.k8s.io
    ```
+   - **ClusterRoles and ClusterRoleBindings**:
+     - **ClusterRoles** are similar to Roles but apply across the entire cluster, not just within a single namespace.
+     - **ClusterRoleBindings** associate a ClusterRole with users, groups, or service accounts, granting permissions cluster-wide.
+	Example:
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-viewer
+rules:
+- apiGroups: [""]
+  #
+  # "" indicates the core API group. You can specify other API groups, like "apps" or "extensions", if needed.
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+```
+
+### **ClusterRoleBinding YAML**
+This `ClusterRoleBinding` binds the `pod-viewer` `ClusterRole` to the `devtechlead` user, granting them the permissions defined in the `ClusterRole` across all namespaces.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-viewer-binding
+subjects:
+- kind: User
+  name: devtechlead
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: pod-viewer
+  apiGroup: rbac.authorization.k8s.io
+```
+
 
 ### 2. **ABAC (Attribute-Based Access Control)**
    - In ABAC, policies are defined in a file where each policy specifies attributes like user, resource, verb, etc.
