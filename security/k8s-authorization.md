@@ -172,7 +172,6 @@ kubectl apply -f tenant-a-rolebinding.yaml
 - **Namespace Isolation**: Tenant A’s developers have the necessary permissions to manage resources within their own namespace (`tenant-a`), but they cannot access or modify resources in other tenants’ namespaces.
 - **Granular Access Control**: Each tenant’s team can be assigned their own roles and bindings, ensuring that permissions are tailored to their specific needs, following the principle of least privilege.
 - **Security**: This approach helps in maintaining strict security boundaries between different tenants in a multi-tenant Kubernetes cluster.
-
 This setup ensures that different teams or tenants can work independently within their own namespaces, reducing the risk of accidental interference or unauthorized access to resources belonging to other teams.
 ---
 ### **Real-Life Example Scenario for ClusterRole and ClusterRoleBinding**
