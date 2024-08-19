@@ -225,13 +225,6 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-- **ClusterRoleBinding:**
-  - **subjects:** The binding is applied to the `logging-team` group, which means all members of this group will inherit the `log-viewer` permissions.
-
-### **Applying the YAML Manifests**
-
-You would save the above YAMLs as `log-viewer-clusterrole.yaml` and `logging-team-binding.yaml`, and apply them with the following commands:
-
 ```bash
 kubectl apply -f log-viewer-clusterrole.yaml
 kubectl apply -f logging-team-binding.yaml
