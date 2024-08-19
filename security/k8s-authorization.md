@@ -17,7 +17,8 @@ Authorization in Kubernetes (K8S) is a key part of its security model, determini
      resources: ["pods"]
      verbs: ["get", "list"]
    ```
-	```yaml
+	
+```yaml
    # RoleBinding to bind the Role to a user
    kind: RoleBinding
    apiVersion: rbac.authorization.k8s.io/v1
@@ -32,7 +33,7 @@ Authorization in Kubernetes (K8S) is a key part of its security model, determini
      kind: Role
      name: pod-reader
      apiGroup: rbac.authorization.k8s.io
-   ```
+```
    - **ClusterRoles and ClusterRoleBindings**:
      - **ClusterRoles** are similar to Roles but apply across the entire cluster, not just within a single namespace.
      - **ClusterRoleBindings** associate a ClusterRole with users, groups, or service accounts, granting permissions cluster-wide.
