@@ -163,10 +163,6 @@ roleRef:
   name: tenant-a-developer
   apiGroup: rbac.authorization.k8s.io
 ```
-- **RoleBinding:**
-  - **namespace:** The `RoleBinding` is also scoped to the `tenant-a` namespace.
-  - **subjects:** The binding is applied to the `tenant-a-devs` group. All members of this group will inherit the permissions defined in the `tenant-a-developer` `Role`.
-  - **roleRef:** Links the `RoleBinding` to the `tenant-a-developer` `Role`, granting the specified permissions to the subject.
 
 ### **Applying the YAML Manifests**
 
