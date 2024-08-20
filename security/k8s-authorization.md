@@ -124,7 +124,9 @@ Let's say Tenant A has a namespace called `crm-webapp1`. The following example s
 
 ### **Role YAML**
 This `Role` grants permissions to manage deployments, services, and secrets within the `crm-webapp1` namespace.
-
+```yaml
+cat crm-team-roles.yaml
+```
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
