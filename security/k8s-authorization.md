@@ -157,8 +157,10 @@ kubectl describe role crm-developer-role -n crm-webapp1
 Example Ouput: 
 ```yaml
 Name:         crm-developer-role
-Labels:       <none>
-Annotations:  <none>
+Labels:       app=crm-webapp1
+              role=developer
+Annotations:  createdBy: admin
+              description: Role for CRM web app developers to manage deployments, services, and secrets.
 PolicyRule:
   Resources         Non-Resource URLs  Resource Names  Verbs
   ---------         -----------------  --------------  -----
