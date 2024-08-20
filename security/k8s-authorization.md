@@ -131,6 +131,12 @@ kind: Role
 metadata:
   namespace: crm-webapp1
   name: crm-developer-role
+  labels:
+    role: developer
+    app: crm-webapp1
+  annotations:
+    createdBy: "admin"
+    description: "Role for CRM web app developers to manage deployments, services, and secrets."
 rules:
 - apiGroups: ["apps"]
   resources: ["deployments"]
