@@ -120,17 +120,17 @@ You want to allow the developers of each tenant to manage their resources (like 
 
 ### **Example: Tenant A’s Namespace**
 
-Let's say Tenant A has a namespace called `tenant-a`. The following example shows how to create a `Role` and `RoleBinding` for the developers of Tenant A.
+Let's say Tenant A has a namespace called `crm-webapp1`. The following example shows how to create a `Role` and `RoleBinding` for the developers of Tenant A.
 
 ### **Role YAML**
-This `Role` grants permissions to manage deployments, services, and secrets within the `tenant-a` namespace.
+This `Role` grants permissions to manage deployments, services, and secrets within the `crm-webapp1` namespace.
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: tenant-a
-  name: tenant-a-developer
+  namespace: crm-webapp1
+  name: crm-developer-role
 rules:
 - apiGroups: ["apps"]
   resources: ["deployments"]
@@ -142,6 +142,33 @@ rules:
   resources: ["secrets"]
   verbs: ["get", "list", "create", "update", "delete"]
 ```
+```yaml
+kubectl apply -f crm-team-roles.yaml 
+kubectl get role -n crm-webapp1
+```
+Example Output:
+```yaml
+NAME                 CREATED AT
+crm-developer-role   2024-08-20T11:45:15Z
+```
+```yaml
+kubectl describe role crm-developer-role -n crm-webapp1
+```
+Example Ouput: 
+```yaml
+Name:         crm-developer-role
+Labels:       <none>
+Annotations:  <none>
+PolicyRule:
+  Resources         Non-Resource URLs  Resource Names  Verbs
+  ---------         -----------------  --------------  -----
+  secrets           []                 []              [get list create update delete]
+  services          []                 []              [get list create update delete]
+  deployments.apps  []                 []              [get list create update delete]
+```
+
+
+
 
 ### **RoleBinding YAML**
 This `RoleBinding` binds the `tenant-a-developer` `Role` to a group called `tenant-a-devs`, allowing members of this group to manage resources within the `tenant-a` namespace.
