@@ -176,7 +176,3 @@ After deploying the resources, you should be able to access your applications vi
 3. **Basic Authentication**: Protect specific paths or services with basic authentication.
 4. **Global Rate Limits**: Limit the number of requests per second for a given path across all clients.
 5. **Advanced Load Balancing**: Use session affinity or weighted load balancing.
-
-### Next Steps
-
-If you'd like to explore any specific advanced features, I can provide more examples or dive deeper into those topics. Would you like to see more advanced configurations or another scenario?
