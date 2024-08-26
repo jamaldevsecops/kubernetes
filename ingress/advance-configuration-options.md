@@ -1,4 +1,4 @@
-Great! Let's dive into some advanced Ingress features with practical examples:
+Let's dive into some advanced Ingress features with practical examples:
 
 ### 1. **Rate Limiting**
    Rate limiting allows you to control the number of requests a client can make to your service. This can protect your application from being overwhelmed by too many requests.
