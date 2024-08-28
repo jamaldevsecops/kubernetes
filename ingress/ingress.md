@@ -54,6 +54,8 @@ spec:
       containers:
       - name: app1-container
         image: my-app1-image
+        command: ["/bin/sh", "-c"]
+        args: ["echo 'Hello from App1' > /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"]
         ports:
         - containerPort: 8080
 
@@ -93,6 +95,8 @@ spec:
       containers:
       - name: app2-container
         image: my-app2-image
+        command: ["/bin/sh", "-c"]
+        args: ["echo 'Hello from App2' > /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"]
         ports:
         - containerPort: 8081
 
