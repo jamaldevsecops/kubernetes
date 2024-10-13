@@ -55,7 +55,7 @@ kubectl get pods -n metallb-system
 	     namespace: metallb-system
 	   spec:
 	     addresses:
-	     - 192.168.69.11-192.168.69.254
+	     - 192.168.20.131-192.168.20.135
       ```
       Make sure to replace the IP address range with a range suitable for your network.
 
