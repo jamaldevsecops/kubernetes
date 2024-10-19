@@ -48,6 +48,7 @@ kubectl get pods -n metallb-system
     - **IPAddressPool Configuration**:
       Create a file named `IPAddressPool.yaml`:
       ```yaml
+      cat > IPAddressPool.yaml << EOF
 	   apiVersion: metallb.io/v1beta1
 	   kind: IPAddressPool
 	   metadata:
@@ -56,6 +57,7 @@ kubectl get pods -n metallb-system
 	   spec:
 	     addresses:
 	     - 192.168.20.131-192.168.20.135
+      EOF
       ```
       Make sure to replace the IP address range with a range suitable for your network.
 
