@@ -64,6 +64,7 @@ kubectl get pods -n metallb-system
     - **L2Advertisement Configuration**:
       Create a file named `L2Advertisement.yaml`:
       ```yaml
+      cat > L2Advertisement.yaml << EOF
 	   apiVersion: metallb.io/v1beta1
 	   kind: L2Advertisement
 	   metadata:
@@ -72,6 +73,7 @@ kubectl get pods -n metallb-system
 	   spec:
 	     ipAddressPools:
 	     - metallb-ip-pool
+      EOF
       ```
 
 2. **Apply the IPAddressPool and L2Advertisement**:
