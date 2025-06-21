@@ -7,4 +7,4 @@ resources:
 
 images:
   - name: docker.io/jamaldevsecops/myapp
-    newTag: v1.1  # This tag will be automatically updated by Argo CD Image Updater
+    newTag: v1.1 # This tag will be automatically updated by Argo CD Image Updater
