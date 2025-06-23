@@ -1,3 +1,3 @@
 kustomize:
   images:
-  - docker.io/jamaldevsecops/myapp:latest
+  - docker.io/jamaldevsecops/myapp:latest@sha256:5647966d44d5906b5571007b044964944fcf27468b140c6c4243e5de8760e3e4
