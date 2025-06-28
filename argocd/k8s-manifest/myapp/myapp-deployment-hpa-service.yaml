@@ -31,8 +31,8 @@ spec:
           #limits:
             #memory: "1Gi"
             #cpu: "1"
-      imagePullSecrets:
-      - name: mydockerhub-creds
+      #imagePullSecrets:
+      #- name: mydockerhub-creds
 ---
 # HPA for myapp
 apiVersion: autoscaling/v2
