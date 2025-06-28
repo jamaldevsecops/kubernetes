@@ -1,3 +1,0 @@
-kustomize:
-  images:
-  - docker.io/jamaldevsecops/myapp:v1.3
