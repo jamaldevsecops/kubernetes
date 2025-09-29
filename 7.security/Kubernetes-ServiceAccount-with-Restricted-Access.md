@@ -162,3 +162,54 @@ kubectl exec -it deploy/<deployment_name> -c <container_name> -- bash
 - Short-lived tokens are valid for ~1 hour.  
 - Long-lived tokens remain valid until the secret is deleted.  
 - Keep tokens safe — they are equivalent to a password.
+
+---
+
+## 🔹 Ready-to-Use Kubeconfig Template (Long-Lived Token)
+
+Save this as `ngd-dev.kubeconfig` (or in `~/.kube/config`):
+
+```yaml
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority-data: <BASE64-ENCODED-CA-HERE>
+    server: <K8S-API-SERVER-URL-HERE>
+  name: my-cluster
+contexts:
+- context:
+    cluster: my-cluster
+    namespace: default
+    user: ngd-dev
+  name: pod-exec-context
+current-context: pod-exec-context
+users:
+- name: ngd-dev
+  user:
+    token: <LONG-LIVED-TOKEN-HERE>
+```
+
+### 🔹 How to use
+
+1. Replace the placeholders:
+
+| Placeholder                     | What to fill                                                   |
+|---------------------------------|----------------------------------------------------------------|
+| `<BASE64-ENCODED-CA-HERE>`      | Run: `kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}'` |
+| `<K8S-API-SERVER-URL-HERE>`     | Run: `kubectl config view --raw -o jsonpath='{.clusters[0].cluster.server}'` |
+| `<LONG-LIVED-TOKEN-HERE>`       | Extract token from long-lived secret: `kubectl get secret ngd-dev-token -n default -o jsonpath='{.data.token}' | base64 -d` |
+
+2. Save the file to `~/.kube/config` **or** keep it separate and use it via:
+```bash
+export KUBECONFIG=/path/to/ngd-dev.kubeconfig
+```
+
+3. Test access:
+```bash
+kubectl get pods
+kubectl exec -it deploy/<deployment_name> -c <container_name> -- bash
+```
+
+- ✅ Allowed: `get pods`, `exec`  
+- ❌ Denied: other actions (like delete, apply)
