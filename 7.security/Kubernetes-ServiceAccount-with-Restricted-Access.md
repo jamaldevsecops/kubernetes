@@ -25,15 +25,18 @@ metadata:
   name: ngd-dev-role
   namespace: default
 rules:
+# Allow get/list pods
 - apiGroups: [""]
   resources: ["pods"]
   verbs: ["get", "list"]
+# Allow exec into pods
 - apiGroups: [""]
-  resources: ["pods/exec
-  - apiGroups: [""]
-  resources: ["pods/log"]
-    verbs: ["get"]"]
+  resources: ["pods/exec"]
   verbs: ["create"]
+# Allow reading pod logs
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
