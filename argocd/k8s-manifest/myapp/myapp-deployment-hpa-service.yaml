@@ -22,6 +22,7 @@ spec:
       containers:
       - name: myapp
         image: docker.io/jamaldevsecops/myapp
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
         #resources:
