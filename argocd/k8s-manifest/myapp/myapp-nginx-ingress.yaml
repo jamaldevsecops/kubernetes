@@ -1,9 +1,3 @@
-# Namespace for myapp
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: myapp
----
  # Ingress Resource for myapp
 apiVersion: networking.k8s.io/v1
 kind: Ingress
