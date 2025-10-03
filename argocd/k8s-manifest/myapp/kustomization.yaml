@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - myapp-deployment-hpa-service.yaml
-  - myapp-namespace-and-nginx-ingress.yaml
+  - myapp-nginx-ingress.yaml
 
 images:
   - name: docker.io/jamaldevsecops/myapp
