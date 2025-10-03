@@ -14,7 +14,7 @@ spec:
   tls:
   - hosts:
     - myapp.apsissolutions.com
-    secretName: apsis-tls
+    secretName: myapp-tls
   rules:
   - host: myapp.apsissolutions.com
     http:
