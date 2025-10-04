@@ -5,4 +5,4 @@ resources:
 - myapp2-nginx-ingress.yaml
 images:
 - name: docker.io/jamaldevsecops/myapp2
-  newTag: latest
+  newTag: green
