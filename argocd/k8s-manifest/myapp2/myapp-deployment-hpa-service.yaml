@@ -1,0 +1,74 @@
+# Deployment for myapp2
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp2-deployment
+  namespace: myapp2 # You can change this to your specific namespace
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: myapp2
+  template:
+    metadata:
+      labels:
+        app: myapp2
+    spec:
+      containers:
+      - name: myapp2
+        image: docker.io/jamaldevsecops/myapp2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        #resources:
+          #requests:
+            #memory: "16Mi"
+            #cpu: "50m"
+          #limits:
+            #memory: "1Gi"
+            #cpu: "1"
+      #imagePullSecrets:
+      #- name: mydockerhub-creds
+---
+# HPA for myapp2
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp2-hpa
+  namespace: myapp2
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp2-deployment
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70  
+---
+# Service for myapp2
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp2-service
+  namespace: myapp2
+  labels:
+    app: myapp2
+spec:
+  type: ClusterIP  
+  selector:
+    app: myapp2
+  ports:
+    - protocol: TCP
+      port: 80            
+      targetPort: 80
