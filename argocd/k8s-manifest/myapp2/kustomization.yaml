@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- myapp2-deployment-hpa-service.yaml
+- myapp2-nginx-ingress.yaml
+images:
+- name: docker.io/jamaldevsecops/myapp2
+  newTag: latest
